@@ -4,7 +4,6 @@ import ARKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var sceneView: ARSCNView!
-
     
 ////////////////////////////////////////////////////////////////////
 // ARWorldTrackingConfiguration - this allows you to track your position and orientation of your device in relation to the real world at all times, can't display 3D content. Make sure as soon as sceneview loads, we want to run this
@@ -27,8 +26,6 @@ class ViewController: UIViewController {
 
     @IBAction func add(_ sender: Any) {
         
-        print("pressing")
-        
 ////////////////////////////////////////////////////////////////////
 //      A node is simply a position in space, it has no shape, no size and no colour
 //      We want to position our node in the root node. Our root node is our starting position!
@@ -50,14 +47,31 @@ class ViewController: UIViewController {
 // how far something away is relative to our starting position (root node)
 ////////////////////////////////////////////////////////////////////
         
-        // -0.3, -0.2, -0.5
-        node.position = SCNVector3(-0.3,-0.2,-0.5)
+        node.position = SCNVector3(0,0,0)
         self.sceneView.scene.rootNode.addChildNode(node)
 
 ////////////////////////////////////////////////////////////////////
 // now if I were to 'add' my box, it'll get placed right where the starting position is (0,0,0) - (x,y,z)
 ////////////////////////////////////////////////////////////////////
         
+
+    }
+    
+    @IBAction func reset(_ sender: Any) {
+////////////////////////////////////////////////////////////////////
+// every time I click add, I'm adding another blue box in the same position, we just can't see it. How can we change the box position? Reset tracking and change starting position!!
+////////////////////////////////////////////////////////////////////
+        
+        self.restartSession()
+        
+    }
+    
+    func restartSession() {
+        self.sceneView.session.pause() // pauses current position
+        self.sceneView.scene.rootNode.enumerateChildNodes { (node, _) in // enumerate through every child node, the box node being one of them
+            node.removeFromParentNode() // remove box from parent node, remove from scene view
+        }
+        self.sceneView.session.run(configuation, options: [.resetTracking, .removeExistingAnchors]) // forget about old starting position and make a new one based on where we are at the moment and remove existing anchors (position and orientation info)
     }
 }
 

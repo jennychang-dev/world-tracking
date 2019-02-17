@@ -28,9 +28,25 @@
                                     <constraint firstAttribute="width" constant="80" id="2V1-3A-96q"/>
                                     <constraint firstAttribute="height" constant="80" id="zvV-sW-Xz1"/>
                                 </constraints>
-                                <state key="normal" title="Add"/>
+                                <state key="normal" title="Add">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="add:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VF6-09-i3a"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6G1-iA-Vfs">
+                                <rect key="frame" x="275" y="567" width="80" height="80"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="GAe-8A-d1R"/>
+                                    <constraint firstAttribute="height" constant="80" id="V0n-eV-vSi"/>
+                                </constraints>
+                                <state key="normal" title="Reset">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="reset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Fm6-p7-bIm"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -38,6 +54,8 @@
                         <constraints>
                             <constraint firstItem="ngi-5P-pqi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="235-8O-GjT"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="W0C-hp-10j" secondAttribute="bottom" constant="20" id="BEm-kQ-yO9"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="6G1-iA-Vfs" secondAttribute="bottom" constant="20" id="Fdc-QW-S7W"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="6G1-iA-Vfs" secondAttribute="trailing" constant="20" id="R5h-yh-cQS"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ngi-5P-pqi" secondAttribute="bottom" id="SjZ-8A-0mR"/>
                             <constraint firstItem="W0C-hp-10j" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="UV6-uy-Gby"/>
                             <constraint firstItem="ngi-5P-pqi" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="YFy-ja-yYy"/>
