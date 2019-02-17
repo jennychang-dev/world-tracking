@@ -36,11 +36,37 @@ class ViewController: UIViewController {
         
         let node = SCNNode()
         
-////////////////////////////////////////////////////////////////////
 // firstMaterial - appearance, diffuse - the colour that's spread across the entire surface
+
+////////////////////////////////////////////////////////////////////
+/*
+         DIFFERENT SHAPES GALLERY!!!!
+         
+         CAPSULE: node.geometry = SCNCapsule(capRadius: 0.1, height: 0.3) - capRadius measures how thick it is
+         CONE: node.geometry = SCNCone(topRadius: 0, bottomRadius: 0.3, height: 0.3) - topRadius is the tip
+         CYLINDER: node.geometry = SCNCylinder(radius: 0.2, height: 0.2)
+         SPHERE: node.geometry = SCNSphere(radius: 0.2)
+         TUBE: node.geometry = SCNTube(innerRadius: 0.2, outerRadius: 0.3, height: 0.5) // innerRadius how wide the hole is
+         TORUS (bball hoop): node.geometry = SCNTorus(ringRadius: 0.3, pipeRadius: 0.1) // pipeRadius: thickness of the pipe
+         PLANE (roads): node.geometry = SCNPlane(width: 0.2, height: 0.2)
+         PYRAMID: node.geometry = SCNPyramid(width: 0.2, height: 0.4, length: 0.2)
+ */
 ////////////////////////////////////////////////////////////////////
         
-        node.geometry = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0.03) // to make a sphere, make chamferRadius 1/2 of other measurements
+////////////////////////////////////////////////////////////////////
+// CUSTOM DRAW A SHAPE OF A HOUSE USING UIBEZIERPATH
+////////////////////////////////////////////////////////////////////
+        
+        let path = UIBezierPath()
+        path.move(to: CGPoint(x: 0, y: 0))
+        path.addLine(to: CGPoint(x: 0, y: 0.2)) // just go up
+        path.addLine(to: CGPoint(x: 0.2, y: 0.3)) // now go diagonal up
+        path.addLine(to: CGPoint(x: 0.4, y: 0.2))
+        path.addLine(to: CGPoint(x: 0.4, y: 0))
+        
+        let shape = SCNShape(path: path, extrusionDepth: 0.2) // extrusiondepth = thickness of path, in this case house
+        node.geometry = shape
+        
         node.geometry?.firstMaterial?.specular.contents = UIColor.orange // specular that is light that is reflected off a surface, but we need to give the scene view a source of light for it to be able to reflect it
         node.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
         
@@ -49,16 +75,8 @@ class ViewController: UIViewController {
 // how far something away is relative to our starting position (root node)
 ////////////////////////////////////////////////////////////////////
         
-        let x = randomNumbers(firstNum: -0.3, secondNum: 0.3) // this will return a float value between 0.3 to the left of the world origin and 0.3 to the right
-        let y = randomNumbers(firstNum: -0.3, secondNum: 0.3) // this will return a float value between 0.3 below the world origin and 0.3 above
-        let z = randomNumbers(firstNum: -0.3, secondNum: 0.3) // this will return a float value between 0.3 behind and 0.3 in front of the world origin
-        
-        node.position = SCNVector3(x,y,z) // now we have a random x,y,z vector for every shape we add
+        node.position = SCNVector3(0,0,-0.7) // 0.7 metres in front of us
         self.sceneView.scene.rootNode.addChildNode(node)
-
-////////////////////////////////////////////////////////////////////
-// now if I were to 'add' my box, it'll get placed right where the starting position is (0,0,0) - (x,y,z)
-////////////////////////////////////////////////////////////////////
 
     }
     
