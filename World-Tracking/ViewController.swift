@@ -13,11 +13,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-////////////////////////////////////////////////////////////////////
-// helps us to debug the app by showing us if the world origin and our feature points are constantly be discovered
-// world origin shows us our starting position and feature points shows us features around us
-////////////////////////////////////////////////////////////////////
+
         
         self.sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.autoenablesDefaultLighting = true // now allows orange light to be able to be reflected (omni is the default - light that is spread across the entire scene)
@@ -28,56 +24,75 @@ class ViewController: UIViewController {
     @IBAction func add(_ sender: Any) {
         
 ////////////////////////////////////////////////////////////////////
-//      A node is simply a position in space, it has no shape, no size and no colour
-//      We want to position our node in the root node. Our root node is our starting position!
-        
-//      If I make something a child node of the root node, it'll be positioned relative to the root node. Recall nodes on their own don't have any attributes so we need to give it some e.g. geometry - chamferRadius how round the shape is
+// create a pyramid that sits on top of a box to create a house shape
+// add a door
 ////////////////////////////////////////////////////////////////////
+        
         
         let node = SCNNode()
+        node.geometry = SCNPyramid(width: 0.1, height: 0.1, length: 0.1)
+        node.geometry?.firstMaterial?.specular.contents = UIColor.orange
+        node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
         
-// firstMaterial - appearance, diffuse - the colour that's spread across the entire surface
-
-////////////////////////////////////////////////////////////////////
+        let boxNode = SCNNode(geometry: SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0))
+        boxNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+        
+        let doorNode = SCNNode(geometry: SCNPlane(width: 0.03, height: 0.06)) // remember a plane is like a flat surface
+        doorNode.geometry?.firstMaterial?.diffuse.contents = UIColor.black
+        
+        let frontWindowNode = SCNNode(geometry: SCNPlane(width: 0.03, height: 0.03))
+        frontWindowNode.geometry?.firstMaterial?.diffuse.contents = UIColor.white
+        
+        let textNode = SCNNode()
+        let text = SCNText(string: "JC's room!!!", extrusionDepth: 1)
+        
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.black
+        text.materials = [material]
+        
+        textNode.position = SCNVector3(x: 0, y: 0.3, z: 0.5)
+        textNode.scale = SCNVector3(0.001, 0.001, 0.001)
+        textNode.geometry = text
+        
+        node.position = SCNVector3(0, 0, -0.3)
+        
+        boxNode.position = SCNVector3(0, -0.05, 0) // remember that coordinate is in the centre of the shape
+        doorNode.position = SCNVector3(0.025, -0.02, 0.051) // flashing light is because the plane is right on the surface
+        frontWindowNode.position = SCNVector3(-0.025, 0.01, 0.051)
+        
+        
+        textNode.geometry = text
+        textNode.position = SCNVector3(-0.1, 0.1, 0)
+        
+        self.sceneView.scene.rootNode.addChildNode(node)
+        node.addChildNode(boxNode)
+        node.addChildNode(textNode)
+        boxNode.addChildNode(doorNode)
+        boxNode.addChildNode(frontWindowNode)
+        
 /*
-         DIFFERENT SHAPES GALLERY!!!!
+THE FOLLOWING CREATES A CYLINDER THAT POSITIONS ITSELF RELATIVE TO THE PYRAMID, RATHER THAN HAVING TO ADD BOTH AS A CHILD VIEW
          
-         CAPSULE: node.geometry = SCNCapsule(capRadius: 0.1, height: 0.3) - capRadius measures how thick it is
-         CONE: node.geometry = SCNCone(topRadius: 0, bottomRadius: 0.3, height: 0.3) - topRadius is the tip
-         CYLINDER: node.geometry = SCNCylinder(radius: 0.2, height: 0.2)
-         SPHERE: node.geometry = SCNSphere(radius: 0.2)
-         TUBE: node.geometry = SCNTube(innerRadius: 0.2, outerRadius: 0.3, height: 0.5) // innerRadius how wide the hole is
-         TORUS (bball hoop): node.geometry = SCNTorus(ringRadius: 0.3, pipeRadius: 0.1) // pipeRadius: thickness of the pipe
-         PLANE (roads): node.geometry = SCNPlane(width: 0.2, height: 0.2)
-         PYRAMID: node.geometry = SCNPyramid(width: 0.2, height: 0.4, length: 0.2)
- */
-////////////////////////////////////////////////////////////////////
-        
-////////////////////////////////////////////////////////////////////
-// CUSTOM DRAW A SHAPE OF A HOUSE USING UIBEZIERPATH
-////////////////////////////////////////////////////////////////////
-        
-        let path = UIBezierPath()
-        path.move(to: CGPoint(x: 0, y: 0))
-        path.addLine(to: CGPoint(x: 0, y: 0.2)) // just go up
-        path.addLine(to: CGPoint(x: 0.2, y: 0.3)) // now go diagonal up
-        path.addLine(to: CGPoint(x: 0.4, y: 0.2))
-        path.addLine(to: CGPoint(x: 0.4, y: 0))
-        
-        let shape = SCNShape(path: path, extrusionDepth: 0.2) // extrusiondepth = thickness of path, in this case house
-        node.geometry = shape
-        
+        let node = SCNNode()
+
+        node.geometry = SCNPyramid(width: 0.1, height: 0.1, length: 0.1)
         node.geometry?.firstMaterial?.specular.contents = UIColor.orange // specular that is light that is reflected off a surface, but we need to give the scene view a source of light for it to be able to reflect it
         node.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
         
-////////////////////////////////////////////////////////////////////
-// we need to create a coordinate, a position - red (horizontal x axis), green (vertical y axis), blue (depth z axis), SCNVector3 is a 3D vector
-// how far something away is relative to our starting position (root node)
-////////////////////////////////////////////////////////////////////
-        
-        node.position = SCNVector3(0,0,-0.7) // 0.7 metres in front of us
+        node.position = SCNVector3(0.2,0.3,-0.2)
         self.sceneView.scene.rootNode.addChildNode(node)
+        
+        // here we are creating a cylinder that will be 0.3 left of pyramid, 0.2 above and 0.3 behind
+        
+        let cylinderNode = SCNNode()
 
+        cylinderNode.geometry = SCNCylinder(radius: 0.05, height: 0.05)
+        cylinderNode.geometry?.firstMaterial?.specular.contents = UIColor.purple
+        cylinderNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        
+        cylinderNode.position = SCNVector3(-0.3,0.2,-0.3)
+        node.addChildNode(cylinderNode) // now we can position the cylinder relative of the pyramid
+*/
     }
     
     @IBAction func reset(_ sender: Any) {
