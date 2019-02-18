@@ -24,11 +24,34 @@ class ViewController: UIViewController {
     @IBAction func add(_ sender: Any) {
         
 ////////////////////////////////////////////////////////////////////
-// create a pyramid that sits on top of a box to create a house shape
-// add a door
+// EULER ANGLES - THREE ANGLES INTRODUCED TO DESCRIBE THE ORIENTATION OF A RIGID BODY WITH RESPECT TO A FIXED COORDINATE SYSTEM
+        
+        // IF I WANT TO ROTATE THE PYRAMID 90 DEGREES VERTICALLY WE ROTATE AROUND X
+        // IF I WANT TO ROTATE THE PYRAMID 90 DEGREES HORIZONTALLY WE ROTATE AROUND Y
+        // IF I WANT TO ROTATE THE PYAMOID 90 DEGREES CLOCKWISE WE ROTATE AROUND Z
+        // WE HAVE TO CONVERT DEGREES TO RADIANS (FUNCTION BELOW)
+        
+// CHILD NODES ROTATE WITH PARENT NODES TO PRESERVE THEIR RELATIVE ORIENTATION
+        
+////////////////////////////////////////////////////////////////////
+/*
+        let cylinder = SCNNode(geometry: SCNCylinder(radius: 0.1, height: 0.1))
+        cylinder.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+        cylinder.position = SCNVector3(0, 0, -0.3)
+        cylinder.eulerAngles = SCNVector3(-90.degreesToRadians, 0, 0) // this makes pyramid fall below cylinder
+        self.sceneView.scene.rootNode.addChildNode(cylinder)
+        
+////////////////////////////////////////////////////////////////////
+// RELATIVE ROTATION - IF I ROTATE THE CYLINDER BY 90 DEGREES, THE PYRAMID WILL ROTATE WITH IT
 ////////////////////////////////////////////////////////////////////
         
-        
+        let pyramid = SCNNode(geometry: SCNPyramid(width: 0.1, height: 0.1, length: 0.1))
+        pyramid.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+        pyramid.position = SCNVector3(0, 0, -0.5) // 0.5m behind the cylinder
+        pyramid.eulerAngles = SCNVector3(0, 0, 0)
+        cylinder.addChildNode(pyramid)
+*/
+     
         let node = SCNNode()
         node.geometry = SCNPyramid(width: 0.1, height: 0.1, length: 0.1)
         node.geometry?.firstMaterial?.specular.contents = UIColor.orange
@@ -44,17 +67,19 @@ class ViewController: UIViewController {
         frontWindowNode.geometry?.firstMaterial?.diffuse.contents = UIColor.white
         
         let textNode = SCNNode()
-        let text = SCNText(string: "JC's room!!!", extrusionDepth: 1)
+        let text = SCNText(string: "WHY NOT CREATE 3D TEXT IN THE MIDDLE OF NOWHERE", extrusionDepth: 1)
         
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.black
         text.materials = [material]
         
         textNode.position = SCNVector3(x: 0, y: 0.3, z: 0.5)
-        textNode.scale = SCNVector3(0.001, 0.001, 0.001)
+        textNode.scale = SCNVector3(0.01, 0.01, 0.01)
         textNode.geometry = text
         
         node.position = SCNVector3(0, 0, -0.3)
+        node.eulerAngles = SCNVector3(0, 0, 0)
+        // If I put Float(180.degreesToRadians) in X --> WAHEY HOUSE IS NOW UPSIDE DOWN!! 
         
         boxNode.position = SCNVector3(0, -0.05, 0) // remember that coordinate is in the centre of the shape
         doorNode.position = SCNVector3(0.025, -0.02, 0.051) // flashing light is because the plane is right on the surface
@@ -70,29 +95,7 @@ class ViewController: UIViewController {
         boxNode.addChildNode(doorNode)
         boxNode.addChildNode(frontWindowNode)
         
-/*
-THE FOLLOWING CREATES A CYLINDER THAT POSITIONS ITSELF RELATIVE TO THE PYRAMID, RATHER THAN HAVING TO ADD BOTH AS A CHILD VIEW
-         
-        let node = SCNNode()
 
-        node.geometry = SCNPyramid(width: 0.1, height: 0.1, length: 0.1)
-        node.geometry?.firstMaterial?.specular.contents = UIColor.orange // specular that is light that is reflected off a surface, but we need to give the scene view a source of light for it to be able to reflect it
-        node.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-        
-        node.position = SCNVector3(0.2,0.3,-0.2)
-        self.sceneView.scene.rootNode.addChildNode(node)
-        
-        // here we are creating a cylinder that will be 0.3 left of pyramid, 0.2 above and 0.3 behind
-        
-        let cylinderNode = SCNNode()
-
-        cylinderNode.geometry = SCNCylinder(radius: 0.05, height: 0.05)
-        cylinderNode.geometry?.firstMaterial?.specular.contents = UIColor.purple
-        cylinderNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        
-        cylinderNode.position = SCNVector3(-0.3,0.2,-0.3)
-        node.addChildNode(cylinderNode) // now we can position the cylinder relative of the pyramid
-*/
     }
     
     @IBAction func reset(_ sender: Any) {
@@ -122,5 +125,10 @@ THE FOLLOWING CREATES A CYLINDER THAT POSITIONS ITSELF RELATIVE TO THE PYRAMID, 
     func randomNumbers(firstNum: CGFloat, secondNum: CGFloat) -> CGFloat {
         return CGFloat(arc4random()) / CGFloat(UINT32_MAX) * abs(firstNum - secondNum) + min(firstNum, secondNum)
     }
+}
+
+extension Int {
+    var degreesToRadians: Double {
+        return Double(self) * .pi/180}
 }
 
